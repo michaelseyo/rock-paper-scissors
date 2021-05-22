@@ -27,7 +27,10 @@ function playRound(playerSelection, computerSelection) {
         return "win";
 }
 
-function getWinner(playerWins, compWins) {
+function getWinner(playerWins, compWins, rounds) {
+    if (rounds < 5) {
+        return "Quitting game...";
+    }
     return (playerWins > compWins) ? "You won the game! Good job!" : "You lost to computer :(";
 }
 
@@ -43,32 +46,34 @@ function game() {
         /* ask for user input, and enter computer function as well */
         const computerSelection = computerPlay(); 
         let playerSelection = prompt("Rock, Paper or Scissors? Type in lowercase");
-        console.log(playerSelection);
-        console.log(typeof(playerSelection))
 
         /* check validity of input */
-        if (playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors") {
-            alert("Please enter a valid input!");
+        if (playerSelection === null) {
+            console.log("Quitting game...");
+            break;
+        } else if (playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors") {
+            console.log("Please enter a valid input!");
             continue;
-        }
+        } 
+        
         /* playRound */
         let result = playRound(playerSelection, computerSelection);
         /* if draw, don't increment rounds */
         if (result === "draw") {
-            alert("It's a draw!")
+            console.log("It's a draw!")
             continue;
         } else if (result === "win") {
             rounds++;
             playerWins++;
-            alert(`You won the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
+            console.log(`You won the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
         } else {
             rounds++;
             compWins++;
-            alert(`You lost to the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
+            console.log(`You lost to the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
         }
     }
-    
-    let winningMessage = getWinner(playerWins, compWins);
+
+    let winningMessage = getWinner(playerWins, compWins, rounds);
     alert(winningMessage);
 }
 
