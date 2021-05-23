@@ -29,9 +29,10 @@ function playRound(playerSelection, computerSelection) {
 
 function getWinner(playerWins, compWins, rounds) {
     if (rounds < 5) {
-        return "Quitting game...";
+        return "Match ended.. Quitting game...";
     }
-    return (playerWins > compWins) ? "You won the game! Good job!" : "You lost to computer :(";
+    return (playerWins > compWins) ? "Match ended.. You won the game! Good job!" : 
+                                        "Match ended.. You lost to computer :(";
 }
 
 function game() {      
