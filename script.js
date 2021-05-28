@@ -4,78 +4,86 @@ function computerPlay() {
     let value = Math.floor(Math.random() * 3); 
     /* for each random value generated, if === 0/1/2, return the relevant options */
     if (value === 0) {
-        return "rock";
+        return "Rock";
     } else if (value === 1) {
-        return "paper";
+        return "Paper";
     } else {
-        return "scissors";
+        return "Scissors";
     }
 }
 
-function playRound(playerSelection, computerSelection) {
+function evaluateRound(playerSelection, computerSelection) {
     /* Need to include the various combinations possible: win/lose/draw;
         Paper/Scissors: Lose; Scissors/Paper: Win;
         Scissors/Rock: Lose; Rock/Scissors: Win;
         Rock/Paper: Lose; Paper/Rock: Win; */
     if (playerSelection === computerSelection) {
         return "draw";
-    } else if (playerSelection === "paper" && computerSelection === "scissors" || 
-                playerSelection === "scissors" && computerSelection === "rock" || 
-                playerSelection === "rock" && computerSelection === "paper") {
+    } else if (playerSelection === "Paper" && computerSelection === "Scissors" || 
+                playerSelection === "Scissors" && computerSelection === "Rock" || 
+                playerSelection === "Rock" && computerSelection === "Paper") {
         return "lose";
     } else 
         return "win";
 }
 
-function getWinner(playerWins, compWins, rounds) {
-    if (rounds < 5) {
-        return "Match ended.. Quitting game...";
-    }
-    return (playerWins > compWins) ? "Match ended.. You won the game! Good job!" : 
-                                        "Match ended.. You lost to computer :(";
+function getWinner(playerWins, compWins) { // the return string we will use to createElement to add in html
+    return (playerWins > compWins) ? alert("Match ended.. You won the game! Good job!") : 
+                                        alert("Match ended.. You lost to computer :(");
 }
 
-function game() {      
-    /* declare a count for compWins and playerWins */
-    let compWins = 0;
-    let playerWins = 0;
-    let rounds = 0;
+function updateScoreBoard(playerWins, compWins, message) {
+    // scoring
+    const pScore = document.querySelector("#playerScore");
+    const cScore = document.querySelector("#compScore");
+    const para = document.querySelector('p');  
+    const maxScore = 5;
 
-    /* loop through 5 games; we used a while loop because we not sure how many draws will happen;
-        assume that draws will make player and computer choose again */
-    while (rounds < 5) {
-        /* ask for user input, and enter computer function as well */
-        const computerSelection = computerPlay(); 
-        let playerSelection = prompt("Rock, Paper or Scissors? Type in lowercase");
-
-        /* check validity of input */
-        if (playerSelection === null) {
-            console.log("Quitting game...");
-            break;
-        } else if (playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors") {
-            console.log("Please enter a valid input!");
-            continue;
-        } 
-        
-        /* playRound */
-        let result = playRound(playerSelection, computerSelection);
-        /* if draw, don't increment rounds */
-        if (result === "draw") {
-            console.log("It's a draw!")
-            continue;
-        } else if (result === "win") {
-            rounds++;
-            playerWins++;
-            console.log(`You won the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
-        } else {
-            rounds++;
-            compWins++;
-            console.log(`You lost to the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
-        }
-    }
-
-    let winningMessage = getWinner(playerWins, compWins, rounds);
-    alert(winningMessage);
+    pScore.textContent = `${ playerWins }`;
+    cScore.textContent = `${ compWins }`;
+    // message
+    if (playerWins === maxScore || compWins === maxScore) {
+        return (playerWins > compWins) ? para.textContent = "YOU WON THE GAME" : 
+                                        para.textContent = "YOU LOST THE GAME";                              
+    } 
+    para.textContent = message;
 }
 
-game();
+function playGame(e) { // plays 1 round only
+    const playerSelection = this.textContent;
+    const computerSelection = computerPlay(); 
+    const maxScore = 5;
+    // retrieve current scores
+    let playerWins = parseInt(document.querySelector("#playerScore").textContent);
+    let compWins = parseInt(document.querySelector("#compScore").textContent);
+
+    if (playerWins === maxScore || compWins === maxScore) {
+        return; // so scores dont go above 5 anymore
+    }
+
+    let result = evaluateRound(playerSelection, computerSelection);
+    if (result === "draw") {
+        // no change in scoreboard textContent
+        updateScoreBoard(playerWins, compWins, "It's a draw!");
+    } else if (result === "win") {
+        playerWins++;
+        updateScoreBoard(playerWins, compWins, "You won the computer!")
+    } else {
+        compWins++;
+        updateScoreBoard(playerWins, compWins, "You lost to the computer!");
+    }
+}
+
+// create click process
+const buttons = document.querySelectorAll("button");
+buttons.forEach(btn => btn.addEventListener('click', playGame));
+
+// player press one of the options
+// addEventListener('click', function); the function is to detect which button clicked; put this in const
+// use the const, put it into the playRound function
+// depending on the outcome of the playRound function, change textContent of the score accordingly
+// retrieve the current score and add 1 to it
+// the first person with score 5 points wins 
+// display winning message by createElement and add to div
+
+// how to ensure that the points don't change after it has ended (aka one player reaches 5 points)
