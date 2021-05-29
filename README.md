@@ -1,2 +1,4 @@
 # rock-paper-scissors
-Bare-bones version through the console for the classic game of rock, paper, scissors. Made while following the odin project for web development
+Classic game of rock, paper, scissors, with buttons as options to choose from. 
+Below the option, there will be pictures of the option that the user has chosen which will appear accordingly.
+

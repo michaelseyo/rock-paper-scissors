@@ -27,63 +27,62 @@ function evaluateRound(playerSelection, computerSelection) {
         return "win";
 }
 
-function getWinner(playerWins, compWins) { // the return string we will use to createElement to add in html
-    return (playerWins > compWins) ? alert("Match ended.. You won the game! Good job!") : 
-                                        alert("Match ended.. You lost to computer :(");
-}
-
-function updateScoreBoard(playerWins, compWins, message) {
+function updateScoreBoard(playerWins, comWins, message) {
     // scoring
     const pScore = document.querySelector("#playerScore");
-    const cScore = document.querySelector("#compScore");
+    const cScore = document.querySelector("#comScore");
     const para = document.querySelector('p');  
     const maxScore = 5;
 
     pScore.textContent = `${ playerWins }`;
-    cScore.textContent = `${ compWins }`;
-    // message
-    if (playerWins === maxScore || compWins === maxScore) {
-        return (playerWins > compWins) ? para.textContent = "YOU WON THE GAME" : 
+    cScore.textContent = `${ comWins }`;
+    // the first person with score 5 points wins 
+    // display winning message by changing textContent 
+    if (playerWins === maxScore || comWins === maxScore) {
+        return (playerWins > comWins) ? para.textContent = "YOU WON THE GAME" : 
                                         para.textContent = "YOU LOST THE GAME";                              
     } 
     para.textContent = message;
 }
 
-function playGame(e) { // plays 1 round only
+function playGame(e) { // plays a round at a time
     const playerSelection = this.textContent;
     const computerSelection = computerPlay(); 
     const maxScore = 5;
     // retrieve current scores
     let playerWins = parseInt(document.querySelector("#playerScore").textContent);
-    let compWins = parseInt(document.querySelector("#compScore").textContent);
+    let comWins = parseInt(document.querySelector("#comScore").textContent);
 
-    if (playerWins === maxScore || compWins === maxScore) {
+    if (playerWins === maxScore || comWins === maxScore) {
         return; // so scores dont go above 5 anymore
     }
 
     let result = evaluateRound(playerSelection, computerSelection);
     if (result === "draw") {
         // no change in scoreboard textContent
-        updateScoreBoard(playerWins, compWins, "It's a draw!");
+        updateScoreBoard(playerWins, comWins, "It's a draw!");
     } else if (result === "win") {
+        // retrieve the current score and add 1 to it
         playerWins++;
-        updateScoreBoard(playerWins, compWins, "You won the computer!")
+        updateScoreBoard(playerWins, comWins, "You won this round!")
     } else {
-        compWins++;
-        updateScoreBoard(playerWins, compWins, "You lost to the computer!");
+        comWins++;
+        updateScoreBoard(playerWins, comWins, "You lost this round!");
     }
 }
 
-// create click process
+function upsize(e) {
+    console.log(this);
+    this.classList.add("button-click");
+}
+
+function originalSize(e) {
+    this.classList.remove("button-click");
+}
+
+// button linked to game logic
 const buttons = document.querySelectorAll("button");
 buttons.forEach(btn => btn.addEventListener('click', playGame));
-
-// player press one of the options
-// addEventListener('click', function); the function is to detect which button clicked; put this in const
-// use the const, put it into the playRound function
-// depending on the outcome of the playRound function, change textContent of the score accordingly
-// retrieve the current score and add 1 to it
-// the first person with score 5 points wins 
-// display winning message by createElement and add to div
-
-// how to ensure that the points don't change after it has ended (aka one player reaches 5 points)
+// button effects
+buttons.forEach(btn => btn.addEventListener('click', upsize));
+buttons.forEach(btn => btn.addEventListener('transitionend', originalSize)) 
