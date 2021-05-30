@@ -2,80 +2,134 @@ function computerPlay() {
     /* This will randomly return a String: 'Rock', 'Paper', 'Scissors'. Can use Math.random() and
         generate a relevant number that is tied to each option */
     let value = Math.floor(Math.random() * 3); 
+    let comIcon = document.querySelector("#com-icon");
+    const playerWins = parseInt(document.querySelector("#playerScore").textContent);
+    const comWins = parseInt(document.querySelector("#comScore").textContent);
+    if (playerWins === maxScore || comWins === maxScore) {
+        return;
+    }
     /* for each random value generated, if === 0/1/2, return the relevant options */
     if (value === 0) {
-        return "rock";
+        comIcon.src = "icons/rock-icon.png";
+        return "Rock";
     } else if (value === 1) {
-        return "paper";
+        comIcon.src = "icons/paper-icon.png";
+        return "Paper";
     } else {
-        return "scissors";
+        comIcon.src = "icons/scissors-icon.png";
+        return "Scissors";
     }
 }
 
-function playRound(playerSelection, computerSelection) {
+function evaluateRound(playerSelection, computerSelection) {
     /* Need to include the various combinations possible: win/lose/draw;
         Paper/Scissors: Lose; Scissors/Paper: Win;
         Scissors/Rock: Lose; Rock/Scissors: Win;
         Rock/Paper: Lose; Paper/Rock: Win; */
     if (playerSelection === computerSelection) {
         return "draw";
-    } else if (playerSelection === "paper" && computerSelection === "scissors" || 
-                playerSelection === "scissors" && computerSelection === "rock" || 
-                playerSelection === "rock" && computerSelection === "paper") {
+    } else if (playerSelection === "Paper" && computerSelection === "Scissors" || 
+                playerSelection === "Scissors" && computerSelection === "Rock" || 
+                playerSelection === "Rock" && computerSelection === "Paper") {
         return "lose";
     } else 
         return "win";
 }
 
-function getWinner(playerWins, compWins, rounds) {
-    if (rounds < 5) {
-        return "Match ended.. Quitting game...";
-    }
-    return (playerWins > compWins) ? "Match ended.. You won the game! Good job!" : 
-                                        "Match ended.. You lost to computer :(";
+function updateScoreBoard(playerWins, comWins, message) {
+    // scoring
+    const pScore = document.querySelector("#playerScore");
+    const cScore = document.querySelector("#comScore");
+    const para = document.querySelector('p');  
+    const maxScore = 5;
+
+    pScore.textContent = `${ playerWins }`;
+    cScore.textContent = `${ comWins }`;
+    // the first person with score 5 points wins 
+    // display winning message by changing textContent 
+    if (playerWins === maxScore || comWins === maxScore) {
+        const scoreboardMessage = document.querySelector("div.scoreboard-message");
+        scoreboardMessage.classList.add("glow");
+        scoreboardMessage.classList.add("upsize")
+        return (playerWins > comWins) ? para.textContent = "YOU WON THE GAME" : 
+                                        para.textContent = "YOU LOST THE GAME";                              
+    } 
+    para.textContent = message;
 }
 
-function game() {      
-    /* declare a count for compWins and playerWins */
-    let compWins = 0;
-    let playerWins = 0;
-    let rounds = 0;
+function playGame(e) { // plays a round at a time
+    const playerSelection = this.textContent;
+    const computerSelection = computerPlay(); 
+    // retrieve current scores
+    let playerWins = parseInt(document.querySelector("#playerScore").textContent);
+    let comWins = parseInt(document.querySelector("#comScore").textContent);
 
-    /* loop through 5 games; we used a while loop because we not sure how many draws will happen;
-        assume that draws will make player and computer choose again */
-    while (rounds < 5) {
-        /* ask for user input, and enter computer function as well */
-        const computerSelection = computerPlay(); 
-        let playerSelection = prompt("Rock, Paper or Scissors? Type in lowercase");
-
-        /* check validity of input */
-        if (playerSelection === null) {
-            console.log("Quitting game...");
-            break;
-        } else if (playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors") {
-            console.log("Please enter a valid input!");
-            continue;
-        } 
-        
-        /* playRound */
-        let result = playRound(playerSelection, computerSelection);
-        /* if draw, don't increment rounds */
-        if (result === "draw") {
-            console.log("It's a draw!")
-            continue;
-        } else if (result === "win") {
-            rounds++;
-            playerWins++;
-            console.log(`You won the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
-        } else {
-            rounds++;
-            compWins++;
-            console.log(`You lost to the computer! Your wins: ${ playerWins } Computer wins: ${ compWins }`);
-        }
+    if (playerWins === maxScore || comWins === maxScore) {
+        return; // so scores dont go above 5 anymore
     }
 
-    let winningMessage = getWinner(playerWins, compWins, rounds);
-    alert(winningMessage);
+    let result = evaluateRound(playerSelection, computerSelection);
+    if (result === "draw") {
+        // no change in scoreboard textContent
+        updateScoreBoard(playerWins, comWins, "It's a draw!");
+    } else if (result === "win") {
+        // retrieve the current score and add 1 to it
+        playerWins++;
+        updateScoreBoard(playerWins, comWins, "You won this round!")
+        scoreboardEffect(".player");
+    } else if (result === "lose") {
+        comWins++;
+        updateScoreBoard(playerWins, comWins, "You lost this round!");
+        scoreboardEffect(".com");
+    }
 }
 
-game();
+function upsizeItem() {
+    this.classList.add("upsize");
+}
+
+function originalSizeItem() {
+    this.classList.remove("upsize");
+}
+
+function removeGlow() {
+    this.classList.remove("glow");
+}
+
+function scoreboardEffect(className) {
+    const board = document.querySelector(className);
+    board.classList.add("upsize");
+    board.classList.add("glow");
+    board.addEventListener("transitionend", originalSizeItem);
+    board.addEventListener("transitionend", removeGlow);
+}
+
+function playerAnimation() {
+    const playerWins = parseInt(document.querySelector("#playerScore").textContent);
+    const comWins = parseInt(document.querySelector("#comScore").textContent);
+    const maxScore = 5;
+    if (playerWins === maxScore || comWins === maxScore) {
+        return;
+    }
+
+    const option = this.textContent;
+    let playerIcon = document.querySelector("#player-icon");
+    if (option === "Rock") {
+        playerIcon.src = "icons/rock-icon.png";
+    } else if (option === "Paper") {
+        playerIcon.src = "icons/paper-icon.png";
+    } else {
+        playerIcon.src = "icons/scissors-icon.png";
+    }
+}
+
+const maxScore = 5;
+// button linked to game logic
+const buttons = document.querySelectorAll("button");
+buttons.forEach(btn => btn.addEventListener('click', playGame));
+// button effects
+buttons.forEach(btn => btn.addEventListener('click', upsizeItem));
+buttons.forEach(btn => btn.addEventListener('transitionend', originalSizeItem));
+buttons.forEach(btn => btn.addEventListener('click', playerAnimation));
+
+// how to reduce duplication of the code for checking end game?? have global variables instead?

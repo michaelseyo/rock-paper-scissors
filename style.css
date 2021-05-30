@@ -1,0 +1,101 @@
+body {
+    background-image: url("icons/background.jpg");
+}
+
+h1 {
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+h2 {
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.choices {
+    display: flex;
+    align-content: center;
+    justify-content: space-evenly;
+    margin: 0px 200px;
+}
+
+button {
+    /* to fix the size of all button */
+    width: 100px; 
+    min-width: 100px;
+    height: 100px;
+
+    font-size: 25px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgb(220, 220, 220);
+    border-style: none;
+}
+
+.upsize {
+    transition: ease-out all 0.2s;
+    transform: scale(1.1);
+}
+
+.scoreboard {
+    margin-top: 80px;
+    display: flex; /* makes side by side */ 
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.scoreboard-message {
+    display: flex;
+    margin: 60px 300px 80px;
+    min-width: 300px;
+    height: 80px;
+    justify-content: center; /* horizontal alignment */
+    align-items: center; /* vertical alignment */
+    font-size: 35px;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+}
+
+.glow {
+    transition: ease-in-out all 0.2s;
+    box-shadow: 0 0 50px rgb(255, 234, 112);
+}
+
+.player {
+    padding: 0 50px;
+    flex: initial; /* doesn't absorb any extra free space in flex container */
+    border: 3px solid rgb(248, 248, 248);
+    border-radius: 10px;
+    background-color: rgb(121, 255, 255);
+}
+
+.com {
+    padding: 0 50px;
+    flex: initial;
+    border: 3px solid rgb(248, 248, 248);
+    border-radius: 10px;
+    background-color: rgb(255, 121, 121);
+}
+
+.icons {
+    padding: 20px 0px;
+    display: flex; /* makes side by side */ 
+    align-content: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+#player-icon {
+    /* reduces & fixes size of icon */
+    width: 30%; 
+    height: 30%;
+}
+
+#com-icon {
+    transform: scaleX(-1); /* flip horizontally */
+    width: 30%;
+    height: 30%;
+}
