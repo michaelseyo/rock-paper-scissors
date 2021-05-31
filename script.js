@@ -3,29 +3,27 @@ function computerPlay() {
         generate a relevant number that is tied to each option */
     let value = Math.floor(Math.random() * 3); 
     let comIcon = document.querySelector("#com-icon");
-    const playerWins = parseInt(document.querySelector("#playerScore").textContent);
-    const comWins = parseInt(document.querySelector("#comScore").textContent);
-    if (playerWins === maxScore || comWins === maxScore) {
+    const end = endGame(maxScore);
+    if (end) {
         return;
     }
+    
+    comIcon.classList.add("upsize");
+    comIcon.addEventListener("transitionend", removeUpsize);
     /* for each random value generated, if === 0/1/2, return the relevant options */
     if (value === 0) {
-        comIcon.src = "icons/rock-icon.png";
+        comIcon.src = "icons/com-rock-icon.png";
         return "Rock";
     } else if (value === 1) {
-        comIcon.src = "icons/paper-icon.png";
+        comIcon.src = "icons/com-paper-icon.png";
         return "Paper";
     } else {
-        comIcon.src = "icons/scissors-icon.png";
+        comIcon.src = "icons/com-scissors-icon.png";
         return "Scissors";
     }
 }
 
 function evaluateRound(playerSelection, computerSelection) {
-    /* Need to include the various combinations possible: win/lose/draw;
-        Paper/Scissors: Lose; Scissors/Paper: Win;
-        Scissors/Rock: Lose; Rock/Scissors: Win;
-        Rock/Paper: Lose; Paper/Rock: Win; */
     if (playerSelection === computerSelection) {
         return "draw";
     } else if (playerSelection === "Paper" && computerSelection === "Scissors" || 
@@ -41,7 +39,6 @@ function updateScoreBoard(playerWins, comWins, message) {
     const pScore = document.querySelector("#playerScore");
     const cScore = document.querySelector("#comScore");
     const para = document.querySelector('p');  
-    const maxScore = 5;
 
     pScore.textContent = `${ playerWins }`;
     cScore.textContent = `${ comWins }`;
@@ -63,9 +60,9 @@ function playGame(e) { // plays a round at a time
     // retrieve current scores
     let playerWins = parseInt(document.querySelector("#playerScore").textContent);
     let comWins = parseInt(document.querySelector("#comScore").textContent);
-
-    if (playerWins === maxScore || comWins === maxScore) {
-        return; // so scores dont go above 5 anymore
+    const end = endGame(maxScore);
+    if (end) {
+        return;
     }
 
     let result = evaluateRound(playerSelection, computerSelection);
@@ -84,14 +81,29 @@ function playGame(e) { // plays a round at a time
     }
 }
 
+function endGame(maxScore) { // 
+    const playerWins = parseInt(document.querySelector("#playerScore").textContent);
+    const comWins = parseInt(document.querySelector("#comScore").textContent);
+    return (playerWins === maxScore || comWins === maxScore) ? true : false;
+}
+
+// Click functions
+function setupButtons() {
+    let buttons = document.querySelectorAll("button");
+    buttons.forEach(btn => btn.addEventListener('click', playGame));
+    // effects
+    buttons.forEach(btn => btn.addEventListener('click', upsizeItem));
+    buttons.forEach(btn => btn.addEventListener('transitionend', removeUpsize));
+    buttons.forEach(btn => btn.addEventListener('click', playerAnimation));
+}
+
 function upsizeItem() {
     this.classList.add("upsize");
 }
 
-function originalSizeItem() {
+function removeUpsize() {
     this.classList.remove("upsize");
 }
-
 function removeGlow() {
     this.classList.remove("glow");
 }
@@ -100,20 +112,21 @@ function scoreboardEffect(className) {
     const board = document.querySelector(className);
     board.classList.add("upsize");
     board.classList.add("glow");
-    board.addEventListener("transitionend", originalSizeItem);
+    board.addEventListener("transitionend", removeUpsize);
     board.addEventListener("transitionend", removeGlow);
 }
 
 function playerAnimation() {
-    const playerWins = parseInt(document.querySelector("#playerScore").textContent);
-    const comWins = parseInt(document.querySelector("#comScore").textContent);
-    const maxScore = 5;
-    if (playerWins === maxScore || comWins === maxScore) {
+    const end = endGame(maxScore);
+    if (end) {
         return;
     }
-
     const option = this.textContent;
     let playerIcon = document.querySelector("#player-icon");
+    // icon animation
+    playerIcon.classList.add("upsize");
+    playerIcon.addEventListener("transitionend", removeUpsize);
+
     if (option === "Rock") {
         playerIcon.src = "icons/rock-icon.png";
     } else if (option === "Paper") {
@@ -123,13 +136,7 @@ function playerAnimation() {
     }
 }
 
-const maxScore = 5;
-// button linked to game logic
-const buttons = document.querySelectorAll("button");
-buttons.forEach(btn => btn.addEventListener('click', playGame));
-// button effects
-buttons.forEach(btn => btn.addEventListener('click', upsizeItem));
-buttons.forEach(btn => btn.addEventListener('transitionend', originalSizeItem));
-buttons.forEach(btn => btn.addEventListener('click', playerAnimation));
+let maxScore = 5;
+setupButtons();
 
-// how to reduce duplication of the code for checking end game?? have global variables instead?
+// make the scoreBoard delay/slower
