@@ -21,21 +21,24 @@ h2 {
 
 button {
     /* to fix the size of all button */
-    width: 100px; 
+    width: 150px; 
     min-width: 100px;
-    height: 100px;
+    height: 80px;
 
     font-size: 25px;
     font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 
     background-color: rgb(255, 255, 255);
     border-radius: 20px;
-    box-shadow: 0px 0px 10px rgb(220, 220, 220);
     border-style: none;
 }
 
+button:hover {
+    box-shadow: 0px 0px 10px rgb(240, 240, 240);
+}
+
 .upsize {
-    transition: ease-out all 0.2s;
+    transition: ease-in-out all 0.2s;
     transform: scale(1.1);
 }
 
@@ -61,13 +64,12 @@ button {
 
 .glow {
     transition: ease-in-out all 0.2s;
-    box-shadow: 0 0 50px rgb(255, 234, 112);
+    box-shadow: 0 0 30px rgb(255, 234, 112);
 }
 
 .player {
     padding: 0 50px;
     flex: initial; /* doesn't absorb any extra free space in flex container */
-    border: 3px solid rgb(248, 248, 248);
     border-radius: 10px;
     background-color: rgb(121, 255, 255);
 }
@@ -75,7 +77,6 @@ button {
 .com {
     padding: 0 50px;
     flex: initial;
-    border: 3px solid rgb(248, 248, 248);
     border-radius: 10px;
     background-color: rgb(255, 121, 121);
 }
@@ -95,7 +96,6 @@ button {
 }
 
 #com-icon {
-    transform: scaleX(-1); /* flip horizontally */
     width: 30%;
     height: 30%;
 }
